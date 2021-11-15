@@ -4,35 +4,34 @@ const sql = new SQLite("./muted.sqlite");
 const { Client, Intents } = require('discord.js');
 const { token } = require('./config.json');
 
-// TODO: check intents
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS] });
 
 client.once('ready', () => {
 	console.log('Ready!');
 
 	const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='muted';").get();
 	if (!table['count(*)']) {
-		sql.prepare("CREATE TABLE muted (id TEXT PRIMARY KEY, user TEXT, guild TEXT, muted INTEGER);").run();
-		sql.prepare("CREATE UNIQUE INDEX muted_id ON muted (id);").run();
+		sql.prepare("CREATE TABLE muted (member TEXT, guild TEXT, UNIQUE (member, guild) ON CONFLICT REPLACE);").run();
 		sql.pragma("synchronous = 1");
 		sql.pragma("journal_mode = wal");
 	}
-	client.checkMute = sql.prepare("SELECT * FROM muted WHERE id = ? AND guild = ?");
-  	client.setMute = sql.prepare("INSERT INTO muted (id, user, guild, muted) VALUES (@id, @user, @guild, @points);");
-  	client.delMute = sql.prepare("DELETE FROM muted WHERE id = ? AND guild = ?");
+	client.checkMute = sql.prepare("SELECT * FROM muted WHERE member = ? AND guild = ?");
+  	client.setMute = sql.prepare("INSERT INTO muted (member, guild) VALUES (@member, @guild);");
+  	client.delMute = sql.prepare("DELETE FROM muted WHERE member = ? AND guild = ?");
 	
 });
 
-client.on('guildMemberAdd', async newMember => {
-	 if(client.checkMute.get(newMember.id, newMember.guild.id)) {
-		 //mute newMember.id
-	 }
+client.on('voiceStateUpdate', (oldState, newState) => {
+	if(!oldState.serverMute && newState.serverMute) {
+		let muted = { member: `${newState.id}`, guild:`${newState.guild.id}` };
+		client.setMute.run(muted);
+	}
+	if(oldState.serverMute && !newState.serverMute)  {
+		client.delMute.run(newState.id, newState.guild.id);
+	}
+	if(!oldState.channelId && newState.channelId && 
+		client.checkMute.get(newState.id, newState.guild.id)) {
+		oldState.setMute(true);
+	}
 });
-
-//on mute
-// client.setMute.run(id, guild.id)
-
-//on unmute
-// client.delMute(id, guild.id)
-
 client.login(token);
