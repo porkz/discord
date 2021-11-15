@@ -1,0 +1,20 @@
+{
+  "name": "stfu",
+  "version": "1.0.0",
+  "description": "keep the muted state when a user parts and joins again",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "author": "fnordie",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "better-sqlite3": "^7.4.4",
+    "discord.js": "^13.3.1",
+    "node-gyp": "^8.4.0"
+  }
+}
