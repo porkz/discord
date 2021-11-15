@@ -1,0 +1,74 @@
+body {
+  background-color: #B4C4D8;
+  font-family: Ubuntu, sans-serif;
+  font-size: 18px;
+  color: #0F0D41;
+   background-image:url(./img/libreantenne.svg);
+   background-repeat:no-repeat;
+   background-size: 100% auto;
+}
+a, a:visited {
+  color: #a40000;
+  text-decoration: none;
+}
+a:hover, a:active {
+  color: #cc0000;
+  text-decoration: underline;
+}
+header, main, footer {
+  width: 80%;
+  margin: auto;
+}
+footer ul {
+  padding: 0;
+}
+footer ul li {
+  display: inline-block;
+  font-size: 32px;
+}
+footer ul li a,
+footer ul li a:visited {
+  display: inline-block;
+  font-size: 32px;
+  width: 32px;
+  opacity: 0.5;
+  transition: 100ms linear;
+  text-decoration: none;
+}
+footer ul li a:hover,
+footer ul li a:active {
+  display: inline-block;
+  font-size: 32px;
+  width: 32px;
+  text-decoration: none;
+  opacity: 0.9;
+}
+footer ul li .fa-youtube {
+  color: #c4302b;
+}
+footer ul li .fa-facebook {
+  color: #082375;
+}
+footer ul li .fa-twitter {
+  color: #1f8ccc;
+}
+footer ul li .fa-steam {
+  color: black;
+}
+footer ul li .fa-twitch {
+  color: #9147fe;
+}
+img.avatar {
+width: 24px;
+length: 24px;
+border-radius: 50%;
+}
+.live {
+  color: white;
+  background: #a40000;
+  font-size:50%;
+  font-family: sans;
+  padding: 2px;
+  border-radius: 50px;
+  border: 2px solid #a40000;
+}
